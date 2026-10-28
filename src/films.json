@@ -44,5 +44,37 @@
   "approach": "Artists tend to struggle quite a bit with imposter syndrome. Within this story, both the protagonists, Nicky and Patrick act as the personifications of self-doubt and belief. Using comedy as a medium of expression, the short film tells the story of aspiring artists.",
   "url": "https://www.youtube.com/watch?v=1SyM_RytuQ4",
   "label": "WATCH THE FILM"
- }
+ },
+ "bts": [
+  {
+   "img": "bts-1.webp",
+   "pos": "50% 40%",
+   "caption": "PROSTHETICS GOING ON",
+   "alt": "A make-up artist presses prosthetic pieces onto the face of a grey-bearded actor, who sits with his eyes closed in afternoon light."
+  },
+  {
+   "img": "bts-2.webp",
+   "pos": "45% 50%",
+   "caption": "THE FINISHED WOUND",
+   "alt": "Close profile of the same actor, now with a raw prosthetic graze across his cheek and a bruise on his brow."
+  },
+  {
+   "img": "bts-3.webp",
+   "pos": "55% 45%",
+   "caption": "CHECKING THE FRAME",
+   "alt": "Three crew members in caps crowd around a cinema camera to check a shot in a room with yellow shelves."
+  },
+  {
+   "img": "bts-4.webp",
+   "pos": "60% 50%",
+   "caption": "BLOCKING THE SUITS",
+   "alt": "An operator frames three actors in black suits and bow ties; the monitor on the camera shows the same three in shot."
+  },
+  {
+   "img": "bts-5.webp",
+   "pos": "50% 35%",
+   "caption": "FITTING-ROOM TAKE",
+   "alt": "An actor in boxer shorts and a blue T-shirt walks past a tailor in a waistcoat and bow tie with a measuring tape around her neck."
+  }
+ ]
 }

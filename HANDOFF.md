@@ -506,10 +506,7 @@ The tests write screenshots to `tests/out/` for visual review. Always look at th
 
 ## 15. Open items, placeholders and suggestions
 
-- **BTS photos missing:** six polaroids show "[BTS PHOTO]".
-  1. Put the images in `src/images/`.
-  2. Replace `<div class="ph-slot"><span>[BTS PHOTO]</span></div>` in `bts_scene()` (build.py) with an `<img>` that has `object-fit: cover`.
-  3. Write real captions and alt text.
+- **BTS photos:** the strip is driven by the `bts` list in `src/films.json` (image, crop focus `pos`, caption, alt text). To add or reorder photos, put a WebP (1000 px long edge) in `src/images/`, add an entry, and rebuild. Captions are descriptive; tie them to film titles once Harsh confirms which shoot each photo is from.
 - **No Instagram or showreel link** has been supplied. The contact section shows email and phone only. If Harsh adds them, use the same `<li>` pattern.
 - **Approach for Till Death:** the split described in section 10. Confirm it with Harsh.
 - **Cuban year (2024):** from the design PDF. Confirm it.

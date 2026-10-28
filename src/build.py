@@ -239,12 +239,12 @@ def contact_scene():
 def bts_scene():
     dk, mb = film_lines(G['jahaan'], bts=True)
     pols = []
-    for i, (key, sid, title, year) in enumerate(FILMS):
-        r = [-3, 2.5, -1.5, 3, -2.5, 1.5][i]
+    for i, ph in enumerate(DATA['bts']):
+        r = [-3, 2.5, -1.5, 3, -2.5, 1.5][i % 6]
         pols.append(f'''<figure class="pol" style="--r:{r}deg">
 <span class="tape" aria-hidden="true"></span>
-<div class="ph-slot"><span>[BTS PHOTO]</span></div>
-<figcaption>ON SET / {html.escape(title)}</figcaption>
+<div class="ph-slot"><img src="images/{ph['img']}" alt="{html.escape(ph['alt'])}" loading="lazy" decoding="async" style="object-position:{ph['pos']}"></div>
+<figcaption>{html.escape(ph['caption'])}</figcaption>
 </figure>''')
     return f'''
 <section class="scene" id="bts" data-kind="bts" data-len="3.2" data-label="BEHIND THE SCENES" aria-labelledby="bts-h">
