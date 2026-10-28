@@ -98,7 +98,7 @@ main{margin-left:var(--rail)}
 .tl{position:absolute;left:calc(var(--cx)*1px);translate:-50% 0;top:calc(var(--y)*1px);font-family:var(--f-disp);font-size:calc(var(--fs)*1px);line-height:1.2;white-space:nowrap;color:var(--ink)}
 .body.dk{inset:0;pointer-events:none}
 .bl{position:absolute;left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);font-size:41.2px;line-height:1.2;white-space:nowrap;text-align:justify;text-align-last:justify;color:var(--orange)}
-.body.mb{left:72px;top:1010px;width:756px;margin:0;font-size:48px;line-height:1.28;text-align:justify;hyphens:auto;color:var(--orange)}
+.body.mb{left:72px;width:756px;margin:0;font-size:56px;line-height:1.28;text-align:justify;hyphens:auto;color:var(--orange)}
 .scrib{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);height:calc(var(--h)*1px);pointer-events:none}
 
 /* portrait echo */

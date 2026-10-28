@@ -66,10 +66,15 @@ M_COVER = [
     ('M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z', LINE),
     ('M-900 1572H120Q142 1572 142 1550V740Q142 718 164 718L2700 718', LINE),
 ]
+# phone intro: scribble tucked under the title, copy box hugging the paragraph (56px, ~502 units tall)
+MI_SCRIB = dict(X=219, Y=384, W=462, H=440)
+MI_BOX = 860                     # top edge of the copy box
+MI_BOT = MI_BOX + 44 + 502 + 52  # paragraph top padding + paragraph + bottom padding
 M_INTRO = [
     ('M-900 52H96Q118 52 118 74Q118 96 140 96', NAVY),
     ('M66 96Q44 96 44 118V316Q44 338 66 338H834Q856 338 856 316V118Q856 96 834 96Z', NAVY),
-    ('M856 190C856 220 870 220 870 250V950Q870 972 848 972H64Q42 972 42 994V1508Q42 1530 64 1530L2700 1530', NAVY),
+    ('M856 190C856 220 870 220 870 250V{t0}Q870 {t} 848 {t}H64Q42 {t} 42 {t1}V{b0}Q42 {b} 64 {b}L2700 {b}'.format(
+        t=MI_BOX, t0=MI_BOX - 22, t1=MI_BOX + 22, b=MI_BOT, b0=MI_BOT - 22), NAVY),
 ]
 M_FILM = [
     ('M-900 210H38', PALE),
@@ -130,12 +135,12 @@ def intro_scene():
     return f'''
 <section class="scene" id="about" data-kind="intro" data-len="2.1" data-label="INTRODUCTION" aria-labelledby="intro-h">
 <div class="stage" style="--bg:var(--pale)"><div class="cv">
-<img class="scrib an" data-fx="wipe" data-a=".1" data-b=".55" src="images/scribble.png" alt="" aria-hidden="true" style="{pos(78.1, -1.1, 887.2, 845.8, 140, 362, 620, 591)}">
+<img class="scrib an" data-fx="wipe" data-a=".1" data-b=".55" src="images/scribble.png" alt="" aria-hidden="true" style="{pos(78.1, -1.1, 887.2, 845.8, **MI_SCRIB)}">
 {paths([(s, NAVY) for s in strokes], 'dk', 0.0, 0.5, 0.08)}
 {paths(M_INTRO, 'mb', 0.0, 0.5, 0.08)}
 <h2 id="intro-h" class="ttl an big" data-fx="drop" data-a=".08" data-b=".3" style="{pos(ttl['bbox'][0], ttl['bbox'][1], X=74, Y=140)}--fs:{ttl['size']};--FS:128;color:var(--navy)">INTRODUCTION</h2>
 <div class="body dk">{body_lines}</div>
-<p class="body mb an" data-fx="wipe" data-a=".4" data-b=".7">{html.escape(para)}</p>
+<p class="body mb an" data-fx="wipe" data-a=".4" data-b=".7" style="top:{MI_BOX + 44}px">{html.escape(para)}</p>
 </div></div>
 </section>'''
 
