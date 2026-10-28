@@ -1,0 +1,13 @@
+{
+  "name": "harsh-purohit-portfolio",
+  "private": true,
+  "description": "Portfolio site for filmmaker Harsh Purohit. Static build from src/ to dist/.",
+  "scripts": {
+    "build": "python3 src/build.py",
+    "serve": "cd dist && python3 -m http.server 8000",
+    "test": "node tests/layout-sweep.js && node tests/sharp-corners.js && node tests/edge-cases.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  }
+}

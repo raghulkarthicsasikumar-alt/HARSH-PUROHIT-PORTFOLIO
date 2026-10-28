@@ -1,0 +1,816 @@
+<title>Harsh Purohit</title>
+<meta name="description" content="Harsh Purohit, filmmaker based in Dubai, UAE. Photographer, videographer, director.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barriecito&amp;family=League+Gothic&amp;display=swap">
+<style>
+/* Layout: each PDF page is a pinned 1600x900 scene (900x1600 on phones) scaled to fit; a fixed rail on the left holds navigation. */
+:root{
+  --navy:#0b174d; --pale:#d5e0d8; --ink:#e7edf1; --line:#cfd3cc; --orange:#b83d00; --paper:#eef1ec; --tape:rgba(232,221,186,.78);
+  --f-disp:'Barriecito','Barriecito Local','Comic Sans MS',cursive;
+  --f-body:'League Gothic','League Gothic Local',Impact,'Arial Narrow',sans-serif;
+  --rail:76px; --bar:56px;
+  color-scheme:dark; background:var(--navy);
+}
+@font-face{font-family:'Barriecito Local';src:url(fonts/barriecito-latin-400-normal.woff2) format('woff2');font-display:swap}
+@font-face{font-family:'League Gothic Local';src:url(fonts/league-gothic-latin-400-normal.woff2) format('woff2');font-display:swap}
+[hidden]{display:none !important}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--f-body);letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+.hp *,.hp *::before,.hp *::after{box-sizing:border-box}
+/* paper grain sits on backgrounds only, never on stills, type or lines */
+.stage,.rail,.panel{background-image:url(images/grain-soft.jpg);background-size:720px auto;background-blend-mode:overlay}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:-999px;top:8px;z-index:100;padding:12px 18px;background:var(--ink);color:var(--navy);font-size:20px;border-radius:10px}
+.skip:focus{left:calc(var(--rail) + 12px)}
+a,button{color:inherit;font:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:4px}
+
+/* ---------- rail ---------- */
+.rail{position:fixed;z-index:50;left:0;top:0;bottom:0;width:var(--rail);display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 0 calc(16px + env(safe-area-inset-bottom,0px));background-color:var(--navy);border-right:3px solid var(--line)}
+.rail-mark{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border:3px solid var(--line);border-radius:14px;font-family:var(--f-disp);font-size:24px;text-decoration:none;color:var(--ink);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.rail-mark:hover{transform:rotate(-6deg)}
+.rail-track{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;flex:1;min-height:120px;max-height:420px;width:44px}
+.rail-track::before,.rail-fill{content:"";position:absolute;left:50%;top:14px;width:3px;margin-left:-1.5px;background:rgba(207,211,204,.35);bottom:14px}
+.rail-fill{background:var(--ink);bottom:auto;height:0}
+.tick{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:44px;flex:1;max-height:44px}
+.tick span{width:12px;height:12px;border-radius:50%;background:var(--navy);border:3px solid var(--line);transition:transform .25s,background .25s}
+.tick:hover span{transform:scale(1.35)}
+.tick.on span{background:var(--orange);border-color:var(--ink);transform:scale(1.25)}
+.rail-now{flex:none;height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.rail-scene{writing-mode:vertical-rl;transform:rotate(180deg);font-size:22px;letter-spacing:.08em;white-space:nowrap;max-height:190px;overflow:hidden;text-overflow:ellipsis}
+.rail-tc{writing-mode:vertical-rl;transform:rotate(180deg);font-size:15px;letter-spacing:.12em;color:var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail-menu{flex:none;width:52px;min-height:104px;border:3px solid var(--line);border-radius:14px;background:var(--ink);color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .3s cubic-bezier(.3,1.6,.5,1),background .2s}
+.rail-menu span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:22px;letter-spacing:.1em}
+.rail-menu:hover{transform:rotate(3deg)}
+.rail-menu[aria-expanded="true"]{background:var(--orange);color:var(--ink)}
+@media (max-height:640px){.rail-now{display:none}}
+
+/* ---------- index panel ---------- */
+.scrim{position:fixed;inset:0;z-index:55;background:rgba(5,10,40,.55);opacity:0;transition:opacity .35s}
+.scrim.open{opacity:1}
+.panel{position:fixed;z-index:60;top:0;bottom:0;left:var(--rail);width:min(640px,calc(100vw - var(--rail)));background-color:var(--navy);border-right:3px solid var(--line);transform:translateX(-104%);transition:transform .5s cubic-bezier(.7,0,.2,1);overflow-y:auto;overscroll-behavior:contain}
+.panel.open{transform:none}
+.panel-in{position:relative;min-height:100%;display:flex;flex-direction:column;gap:22px;padding:28px 34px calc(28px + env(safe-area-inset-bottom,0px))}
+.panel-in::before{content:"";position:absolute;inset:14px;border:3px solid rgba(207,211,204,.55);border-radius:24px;pointer-events:none}
+.panel-top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.panel-h{font-family:var(--f-disp);font-size:58px;line-height:1;color:var(--ink)}
+.panel-x{min-height:44px;padding:0 20px;border:3px solid var(--line);border-radius:999px;background:transparent;font-size:22px;letter-spacing:.08em;cursor:pointer;transition:background .2s,color .2s}
+.panel-x:hover{background:var(--ink);color:var(--navy)}
+.ix{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ix a{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:baseline;gap:14px;min-height:50px;padding:9px 12px;border-radius:14px;text-decoration:none;color:var(--ink);transition:background .2s,color .2s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.ix-n{font-size:20px;letter-spacing:.08em;color:var(--line);font-variant-numeric:tabular-nums}
+.ix-t{font-family:var(--f-disp);font-size:28px;line-height:1.05;text-wrap:balance}
+.ix-y{font-size:20px;letter-spacing:.08em;color:var(--line)}
+.ix a:hover{background:var(--ink);color:var(--navy);transform:translateX(8px) rotate(-.6deg)}
+.ix a:hover .ix-n,.ix a:hover .ix-y{color:var(--navy)}
+.ix a.on{background:var(--orange)}
+.ix a.on .ix-n,.ix a.on .ix-y{color:var(--ink)}
+.panel-foot{position:relative;margin:auto 0 0;font-size:18px;letter-spacing:.1em;color:var(--line)}
+
+/* ---------- scenes ---------- */
+main{margin-left:var(--rail)}
+.scene{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background-color:var(--bg)}
+.scene[data-len="1"] .stage{position:relative;top:0}
+.watch{margin-top:14px;display:inline-flex;align-items:center;gap:12px;min-height:56px;padding:8px 28px 4px;border:3px solid var(--navy);border-radius:999px;background:var(--navy);color:var(--ink);font-size:26px;letter-spacing:.08em;text-decoration:none;transition:background .2s,color .2s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.watch:hover{background:var(--orange);border-color:var(--orange);transform:rotate(-2deg)}
+.notes{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);display:flex;gap:80px;align-items:flex-start;color:var(--navy)}
+.n-ap{flex:1 1 0;min-width:0;max-width:900px}
+.n-side{flex:0 0 440px;display:flex;flex-direction:column;align-items:flex-start}
+.n-h{margin:0 0 12px;font-family:var(--f-disp);font-size:44px;font-weight:400;line-height:1;color:var(--navy)}
+.n-p{margin:0;font-size:34px;line-height:1.28;color:var(--navy)}
+.n-r{margin:0;font-size:30px;line-height:1.2;color:var(--orange)}
+/* mild cursor-led drift */
+.film .still{translate:calc(var(--mx,0)*var(--d,4)*1px) calc(var(--my,0)*var(--d,4)*.7px)}
+.film .film-t{translate:calc(var(--mx,0)*-4px) 0}
+.scrib{translate:calc(var(--mx,0)*10px) calc(var(--my,0)*6px)}
+.cv{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0}
+.cv>*{position:absolute}
+.wires,.band{left:0;top:0;width:1600px;height:900px;overflow:visible;pointer-events:none}
+.wires{fill:none;stroke-width:4.17;stroke-linecap:round;stroke-linejoin:round}
+.wires path{fill:none}
+.hp:not(.pm) .mb,.pm .dk{display:none !important}
+
+/* text */
+.name{inset:0;margin:0;pointer-events:none;font-weight:400}
+.line{position:absolute;left:calc(var(--x)*1px);top:calc(var(--y)*1px);font-family:var(--f-disp);font-size:calc(var(--fs)*1px);line-height:1.2;white-space:nowrap;color:var(--ink)}
+.lt{display:inline-block}
+.tagline{left:calc(var(--x)*1px);top:calc(var(--y)*1px);margin:0;font-size:calc(var(--fs)*1px);line-height:1.2;white-space:nowrap;color:var(--ink)}
+.ttl{margin:0;font-weight:400}
+.ttl.big{left:calc(var(--x)*1px);top:calc(var(--y)*1px);font-family:var(--f-disp);font-size:calc(var(--fs)*1px);line-height:1.2;white-space:nowrap}
+.film-t{inset:0;pointer-events:none}
+.tls{display:contents}
+.tl{position:absolute;left:calc(var(--cx)*1px);translate:-50% 0;top:calc(var(--y)*1px);font-family:var(--f-disp);font-size:calc(var(--fs)*1px);line-height:1.2;white-space:nowrap;color:var(--ink)}
+.body.dk{inset:0;pointer-events:none}
+.bl{position:absolute;left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);font-size:41.2px;line-height:1.2;white-space:nowrap;text-align:justify;text-align-last:justify;color:var(--orange)}
+.body.mb{left:72px;top:1010px;width:756px;margin:0;font-size:48px;line-height:1.28;text-align:justify;hyphens:auto;color:var(--orange)}
+.scrib{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);height:calc(var(--h)*1px);pointer-events:none}
+
+/* portrait echo */
+.portrait{left:0;top:33.7px;width:767.5px;height:1100px;overflow:hidden;pointer-events:none}
+.pl{position:absolute;left:90.5px;top:.1px;width:676.9px;height:1014.7px;object-fit:contain;object-position:bottom;max-width:none}
+
+/* stills */
+.still{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);height:calc(var(--h)*1px);padding:0;margin:0;border:0;background:transparent;cursor:pointer}
+.ph{display:block;width:100%;height:100%;overflow:hidden;background:var(--navy);transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .45s cubic-bezier(.3,1.5,.5,1),filter .3s}
+.ph img{display:block;width:100%;height:100%;object-fit:cover;max-width:none;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+@media (hover:hover){
+  .still:hover .ph{transform:translate(-8px,-8px) rotate(-1deg);box-shadow:12px 12px 0 var(--navy)}
+  .still:hover .ph img{transform:scale(1.05)}
+  .cv:has(.still:hover) .still:not(:hover) .ph{filter:saturate(.45) brightness(.75)}
+}
+.still:focus-visible .ph{outline:3px solid var(--orange);outline-offset:4px}
+
+/* contact */
+.who{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);display:flex;flex-direction:column;gap:10px}
+.who-n{font-family:var(--f-disp);font-size:58px;line-height:1.05;color:var(--ink)}
+.who-l{font-size:30px;letter-spacing:.08em;color:var(--line)}
+.links{left:calc(var(--x)*1px);top:calc(var(--y)*1px);width:calc(var(--w)*1px);margin:0;padding:0;list-style:none;display:flex;gap:64px}
+.links li{display:flex;flex-direction:column;gap:2px}
+.links .k{font-size:22px;letter-spacing:.12em;color:var(--line)}
+.links .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.links .v{font-size:40px;line-height:1.1;color:var(--ink);text-decoration:none;border-bottom:3px solid rgba(207,211,204,.5)}
+.links .v:hover{border-color:var(--orange)}
+.copy{min-height:44px;padding:4px 16px 0;border:3px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);font-size:20px;letter-spacing:.1em;transition:background .2s,color .2s}
+.copy:hover{background:var(--ink);color:var(--navy)}
+.pm .copy{font-size:30px;min-height:70px;padding:6px 26px 0}
+.totop,.back{left:calc(var(--x)*1px);top:calc(var(--y)*1px);display:inline-flex;align-items:center;min-height:56px;padding:6px 22px 2px;border:3px solid currentColor;border-radius:999px;font-size:30px;letter-spacing:.08em;text-decoration:none;transition:background .2s,color .2s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.totop{color:var(--ink)}
+.totop:hover{background:var(--ink);color:var(--navy);transform:rotate(-2deg)}
+.back{color:var(--navy);background:var(--paper)}
+.back:hover{background:var(--navy);color:var(--ink);transform:rotate(-2deg)}
+
+/* behind the scenes strip */
+.track{left:0;top:285px;display:flex;gap:70px;will-change:transform}
+.pol{position:relative;flex:none;width:380px;height:500px;margin:0;padding:20px 20px 0;background:var(--paper);box-shadow:8px 10px 0 rgba(5,10,40,.35);transform:rotate(var(--r))}
+.tape{position:absolute;left:50%;top:-20px;width:150px;height:40px;margin-left:-75px;background:var(--tape);transform:rotate(-4deg)}
+.pol:nth-child(even) .tape{transform:rotate(5deg)}
+.ph-slot{height:340px;display:flex;align-items:center;justify-content:center;background:var(--navy);border:3px dashed rgba(231,237,241,.55)}
+.ph-slot span{font-size:30px;letter-spacing:.1em;color:var(--ink)}
+.pol figcaption{margin-top:22px;font-family:var(--f-disp);font-size:28px;line-height:1.05;text-align:center;color:var(--navy);text-wrap:balance}
+
+/* ---------- cursor, hover card, lightbox ---------- */
+.fcard{position:fixed;left:0;top:0;z-index:70;width:360px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px 18px 14px;background:var(--ink);color:var(--navy);border:3px solid var(--navy);border-radius:18px;pointer-events:none;opacity:0;scale:.7;rotate:-6deg;transition:opacity .2s,scale .35s cubic-bezier(.3,1.7,.5,1),rotate .35s}
+.fcard.on{opacity:1;scale:1;rotate:-2deg}
+.fc-t{font-family:var(--f-disp);font-size:28px;line-height:1}
+.fc-y{padding:3px 10px 1px;background:var(--navy);color:var(--ink);border-radius:8px;font-size:17px;letter-spacing:.08em}
+.fc-l{font-size:20px;line-height:1.2;color:var(--orange)}
+.fc-r{font-size:16px;line-height:1.2;letter-spacing:.06em;color:var(--navy)}
+@media (hover:none),(pointer:coarse){.fcard{display:none}}
+.hp{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2726%27%20height%3D%2730%27%20viewBox%3D%270%200%2026%2030%27%3E%3Cpath%20d%3D%27M3%202.5V24l5.6-5.2%203.7%208.6%204-1.7-3.7-8.4H20Z%27%20fill%3D%27black%27%20stroke%3D%27white%27%20stroke-width%3D%271.8%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E") 3 2,auto}
+.hp a,.hp button{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2726%27%20height%3D%2730%27%20viewBox%3D%270%200%2026%2030%27%3E%3Cpath%20d%3D%27M3%202.5V24l5.6-5.2%203.7%208.6%204-1.7-3.7-8.4H20Z%27%20fill%3D%27black%27%20stroke%3D%27white%27%20stroke-width%3D%271.8%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E") 3 2,pointer}
+
+.lb{position:fixed;inset:0;z-index:85;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:64px max(16px,4vw) 32px;background:rgba(8,16,58,.95)}
+.lb-fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:min(1300px,100%)}
+.lb-fig img{max-width:100%;max-height:68vh;object-fit:contain;border:3px solid var(--ink);transform:rotate(-.6deg)}
+.lb-fig figcaption{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.lb-t{font-size:28px;letter-spacing:.06em;color:var(--ink)}
+.lb-l{font-size:20px;color:var(--line)}
+.lb-ctrl{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.lb-ctrl button{min-height:48px;min-width:48px;padding:0 22px;border:3px solid var(--ink);border-radius:999px;background:transparent;font-size:24px;letter-spacing:.06em;cursor:pointer;transition:background .2s,color .2s}
+.lb-ctrl button:hover{background:var(--ink);color:var(--navy)}
+
+/* ---------- phone / portrait mode (class set by script) ---------- */
+.pm{--rail:0px}
+.pm .rail{right:0;bottom:auto;width:auto;height:var(--bar);flex-direction:row;justify-content:space-between;gap:12px;padding:0 max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));border-right:0;border-bottom:3px solid var(--line)}
+.pm .rail-mark{width:44px;height:44px;font-size:20px}
+.pm .rail-track,.pm .rail-tc{display:none}
+.pm .rail-now{display:flex;height:auto;flex:1;min-width:0}
+.pm .rail-scene{writing-mode:horizontal-tb;transform:none;font-size:20px;max-height:none;max-width:100%}
+.pm .rail-menu{width:auto;min-height:44px;padding:0 16px}
+.pm .rail-menu span{writing-mode:horizontal-tb;transform:none;font-size:20px}
+.pm .rail::after{content:"";position:absolute;left:0;bottom:-3px;height:3px;width:calc(var(--prog,0)*100%);background:var(--orange)}
+.pm .panel{left:0;top:var(--bar);width:100vw;border-right:0}
+.pm .panel-h{font-size:46px}
+.pm .ix-t{font-size:24px}
+.pm main{margin-left:0;padding-top:var(--bar)}
+.pm .notes{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);width:calc(var(--W)*1px);flex-direction:column;gap:44px}
+.pm .n-ap,.pm .n-side{flex:none;max-width:none;width:100%}
+.pm .n-h{font-size:58px}
+.pm .n-p{font-size:42px}
+.pm .n-r{font-size:38px}
+.pm .watch{font-size:36px;min-height:88px;padding:10px 36px 6px}
+.pm .stage{top:var(--bar);height:calc(100vh - var(--bar));height:calc(100svh - var(--bar))}
+.pm .cv{width:900px;height:1600px}
+.pm .wires,.pm .band{width:900px;height:1600px}
+.pm .wires{stroke-width:4.5}
+.pm .line{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);font-size:calc(var(--FS)*1px)}
+.pm .tagline{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);font-size:calc(var(--FS)*1px)}
+.pm .ttl.big{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);font-size:calc(var(--FS)*1px)}
+.pm .film-t{inset:auto;left:90px;top:90px;width:720px;height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pm .tl{position:static;translate:none;font-size:calc(var(--FS)*1px);text-align:center}
+.pm .scrib{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);width:calc(var(--W)*1px);height:calc(var(--H)*1px)}
+.pm .portrait{left:0;top:720px;width:900px;height:1000px}
+.pm .pl{left:250px;top:0;width:667px;height:1000px}
+.pm .still{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);width:calc(var(--W)*1px);height:calc(var(--H)*1px)}
+.pm .who,.pm .links{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);width:calc(var(--W)*1px)}
+.pm .links{flex-direction:column;gap:30px}
+.pm .links .k{font-size:30px}
+.pm .links .v{font-size:56px}
+.pm .who-n{font-size:72px}
+.pm .who-l{font-size:38px}
+.pm .totop,.pm .back{left:calc(var(--X)*1px);top:calc(var(--Y)*1px);font-size:40px;min-height:84px;padding:8px 32px 4px}
+.pm .track{top:430px;gap:80px}
+.pm .pol{width:600px;height:800px;padding:28px 28px 0}
+.pm .ph-slot{height:580px}
+.pm .ph-slot span{font-size:44px}
+.pm .pol figcaption{font-size:44px;margin-top:30px}
+.pm .tape{width:200px;height:52px;margin-left:-100px;top:-26px}
+
+@media (prefers-reduced-motion:reduce){
+  .hp *,.hp *::before,.hp *::after{transition:none !important;animation:none !important}
+}
+
+</style>
+<div class="hp" id="hp">
+<a class="skip" href="#about">Skip to introduction</a>
+<header class="rail" aria-label="Site navigation">
+<a class="rail-mark" href="#cover" data-target="cover" aria-label="Harsh Purohit, back to the cover">HP</a>
+<nav class="rail-track" aria-label="Scenes"><a class="tick" href="#cover" data-target="cover" aria-label="Cover"><span></span></a><a class="tick" href="#about" data-target="about" aria-label="Introduction"><span></span></a><a class="tick" href="#jahaan" data-target="jahaan" aria-label="Jahaan"><span></span></a><a class="tick" href="#sugar" data-target="sugar" aria-label="Two Packets Of Sugar, Trust Me."><span></span></a><a class="tick" href="#roots" data-target="roots" aria-label="Roots"><span></span></a><a class="tick" href="#guest-room" data-target="guest-room" aria-label="The Guest Room"><span></span></a><a class="tick" href="#till-death" data-target="till-death" aria-label="Till Death Do Us Part"><span></span></a><a class="tick" href="#cuban" data-target="cuban" aria-label="Courtesy Of Cuban Evangelical Bob"><span></span></a><a class="tick" href="#bts" data-target="bts" aria-label="Behind The Scenes"><span></span></a><a class="tick" href="#contact" data-target="contact" aria-label="Contact"><span></span></a><span class="rail-fill" aria-hidden="true"></span></nav>
+<div class="rail-now" aria-live="polite"><span class="rail-scene">COVER</span></div>
+<span class="rail-tc" aria-hidden="true">TC 00:00:00:00</span>
+<button class="rail-menu" type="button" aria-expanded="false" aria-controls="panel"><span>INDEX</span></button>
+</header>
+<div class="scrim" hidden></div>
+<aside class="panel" id="panel" aria-label="Index" hidden>
+<div class="panel-in">
+<div class="panel-top"><span class="panel-h">INDEX</span><button class="panel-x" type="button">CLOSE</button></div>
+<ol class="ix"><li><a href="#cover" data-target="cover"><span class="ix-n">00</span><span class="ix-t">COVER</span><span class="ix-y"></span></a></li><li><a href="#about" data-target="about"><span class="ix-n">01</span><span class="ix-t">INTRODUCTION</span><span class="ix-y"></span></a></li><li><a href="#jahaan" data-target="jahaan"><span class="ix-n">02</span><span class="ix-t">JAHAAN</span><span class="ix-y">2025</span></a></li><li><a href="#sugar" data-target="sugar"><span class="ix-n">03</span><span class="ix-t">TWO PACKETS OF SUGAR, TRUST ME.</span><span class="ix-y">2025</span></a></li><li><a href="#roots" data-target="roots"><span class="ix-n">04</span><span class="ix-t">ROOTS</span><span class="ix-y">2026</span></a></li><li><a href="#guest-room" data-target="guest-room"><span class="ix-n">05</span><span class="ix-t">THE GUEST ROOM</span><span class="ix-y">2025</span></a></li><li><a href="#till-death" data-target="till-death"><span class="ix-n">06</span><span class="ix-t">TILL DEATH DO US PART</span><span class="ix-y">2025</span></a></li><li><a href="#cuban" data-target="cuban"><span class="ix-n">07</span><span class="ix-t">COURTESY OF CUBAN EVANGELICAL BOB</span><span class="ix-y">2024</span></a></li><li><a href="#bts" data-target="bts"><span class="ix-n">08</span><span class="ix-t">BEHIND THE SCENES</span><span class="ix-y"></span></a></li><li><a href="#contact" data-target="contact"><span class="ix-n">09</span><span class="ix-t">CONTACT</span><span class="ix-y"></span></a></li></ol>
+<p class="panel-foot">HARSH PUROHIT / PHOTOGRAPHER, VIDEOGRAPHER, DIRECTOR</p>
+</div>
+</aside>
+<main id="main-view">
+<section class="scene" id="cover" data-kind="cover" data-len="1.7" data-label="COVER" aria-label="Harsh Purohit">
+<div class="stage" style="--bg:var(--navy)"><div class="cv">
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><g stroke="var(--line)"><path class="draw" d="M-900 23.9L0.0 23.9L156.9 23.9C169.3 23.9 179.4 34.0 179.4 46.4L179.4 210.2C179.4 222.6 189.5 232.7 201.9 232.7L429.0 232.7C441.4 232.7 451.5 222.6 451.5 210.2L451.5 58.5C451.5 46.1 461.6 36.0 474.0 36.0L1551.4 36.0C1563.8 36.0 1573.9 46.1 1573.9 58.5L1573.9 701.3C1573.9 713.7 1563.8 723.8 1551.4 723.8L459.9 723.8C447.5 723.8 437.4 733.8 437.4 746.3L437.4 830.7C437.4 843.1 447.5 853.2 459.9 853.2L1600.0 853.2L2500 853.2" data-d0="M-900 23.9L0.0 23.9L156.9 23.9C169.3 23.9 179.4 34.0 179.4 46.4L179.4 210.2C179.4 222.6 189.5 232.7 201.9 232.7L429.0 232.7C441.4 232.7 451.5 222.6 451.5 210.2L451.5 58.5C451.5 46.1 461.6 36.0 474.0 36.0L1551.4 36.0C1563.8 36.0 1573.9 46.1 1573.9 58.5L1573.9 701.3C1573.9 713.7 1563.8 723.8 1551.4 723.8L459.9 723.8C447.5 723.8 437.4 733.8 437.4 746.3L437.4 830.7C437.4 843.1 447.5 853.2 459.9 853.2L1600.0 853.2L2500 853.2" data-a="0.00" data-b="0.75"/><path class="draw" d="M-900 56.9L0.0 56.9L124.3 56.9C136.8 56.9 146.8 67.0 146.8 79.4L146.8 243.2C146.8 255.6 156.9 265.7 169.3 265.7L459.1 265.7C471.5 265.7 481.6 255.6 481.6 243.2L481.6 91.5C481.6 79.1 491.6 69.0 504.1 69.0L1521.4 69.0C1533.8 69.0 1543.9 79.1 1543.9 91.5L1543.9 665.3C1543.9 677.8 1533.8 687.8 1521.4 687.8L419.9 687.8C407.4 687.8 397.4 697.9 397.4 710.3L397.4 861.3C397.4 873.7 407.4 883.8 419.9 883.8L1600.0 883.8L2500 883.8" data-d0="M-900 56.9L0.0 56.9L124.3 56.9C136.8 56.9 146.8 67.0 146.8 79.4L146.8 243.2C146.8 255.6 156.9 265.7 169.3 265.7L459.1 265.7C471.5 265.7 481.6 255.6 481.6 243.2L481.6 91.5C481.6 79.1 491.6 69.0 504.1 69.0L1521.4 69.0C1533.8 69.0 1543.9 79.1 1543.9 91.5L1543.9 665.3C1543.9 677.8 1533.8 687.8 1521.4 687.8L419.9 687.8C407.4 687.8 397.4 697.9 397.4 710.3L397.4 861.3C397.4 873.7 407.4 883.8 419.9 883.8L1600.0 883.8L2500 883.8" data-a="0.10" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><g stroke="var(--line)"><path class="draw" d="M-900 24H560Q582 24 582 46V74Q582 96 604 96" data-d0="M-900 24H560Q582 24 582 46V74Q582 96 604 96" data-a="0.00" data-b="0.70"/><path class="draw" d="M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z" data-d0="M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M-900 1572H120Q142 1572 142 1550V740Q142 718 164 718L2700 718" data-d0="M-900 1572H120Q142 1572 142 1550V740Q142 718 164 718L2700 718" data-a="0.20" data-b="0.90"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<div class="portrait" aria-hidden="false"><img class="pl" src="images/portrait-violet.webp" alt="" data-o="-151.7" style="--x:-61.2;--y:33.8;--w:676.9;--h:1014.7;"><img class="pl" src="images/portrait-purple.webp" alt="" data-o="-109.9" style="--x:-19.4;--y:33.8;--w:676.9;--h:1014.7;"><img class="pl" src="images/portrait-red.webp" alt="" data-o="-48.4" style="--x:42.1;--y:33.8;--w:676.9;--h:1014.7;"><img class="pl" src="images/portrait-orange.webp" alt="Portrait of Harsh Purohit" data-o="0" style="--x:90.5;--y:33.8;--w:676.9;--h:1014.7;"></div>
+<h1 class="name" aria-label="Harsh Purohit">
+<span class="line l1" aria-hidden="true" style="--x:507.6;--y:33.1;--X:56;--Y:70;--fs:348.1;--FS:268"><span class="lt h" data-i="0">H</span><span class="lt h" data-i="1">A</span><span class="lt h" data-i="2">R</span><span class="lt h" data-i="3">S</span><span class="lt h" data-i="4">H</span></span>
+<span class="line l2" aria-hidden="true" style="--x:547.2;--y:387.8;--X:56;--Y:345;--fs:277.0;--FS:220"><span class="lt p" data-i="0">P</span><span class="lt p" data-i="1">U</span><span class="lt p" data-i="2">R</span><span class="lt p" data-i="3">O</span><span class="lt p" data-i="4">H</span><span class="lt p" data-i="5">I</span><span class="lt p" data-i="6">T</span></span>
+</h1>
+<p class="tagline an" data-fx="wipe" data-a=".55" data-b=".85" style="--x:1061.4;--y:766.7;--X:60;--Y:630;--fs:38.9;--FS:44">PHOTOGRAPHER, VIDEOGRAPHER, DIRECTOR</p>
+</div></div>
+</section>
+<section class="scene" id="about" data-kind="intro" data-len="2.1" data-label="INTRODUCTION" aria-labelledby="intro-h">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<img class="scrib an" data-fx="wipe" data-a=".1" data-b=".55" src="images/scribble.png" alt="" aria-hidden="true" style="--x:78.1;--y:-1.1;--w:887.2;--h:845.8;--X:140;--Y:362;--W:620;--H:591;">
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><g stroke="var(--navy)"><path class="draw" d="M-900 32.8L0.0 32.8L49.2 32.8C61.6 32.8 71.7 42.8 71.7 55.3L71.7 174.3C71.7 186.7 81.7 196.8 94.2 196.8L114.9 196.8C127.4 196.8 137.4 186.7 137.4 174.3L137.4 64.8C137.4 52.4 147.5 42.3 159.9 42.3L1520.9 42.3C1533.3 42.3 1543.4 52.4 1543.4 64.8L1543.4 325.4C1543.4 337.8 1533.3 347.9 1520.9 347.9L233.6 347.9C221.2 347.9 211.1 358.0 211.1 370.4L211.1 802.9C211.1 815.3 221.2 825.4 233.6 825.4L2500 825.4" data-d0="M-900 32.8L0.0 32.8L49.2 32.8C61.6 32.8 71.7 42.8 71.7 55.3L71.7 174.3C71.7 186.7 81.7 196.8 94.2 196.8L114.9 196.8C127.4 196.8 137.4 186.7 137.4 174.3L137.4 64.8C137.4 52.4 147.5 42.3 159.9 42.3L1520.9 42.3C1533.3 42.3 1543.4 52.4 1543.4 64.8L1543.4 325.4C1543.4 337.8 1533.3 347.9 1520.9 347.9L233.6 347.9C221.2 347.9 211.1 358.0 211.1 370.4L211.1 802.9C211.1 815.3 221.2 825.4 233.6 825.4L2500 825.4" data-a="0.00" data-b="0.50"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 200.2C30.4 212.6 40.5 222.7 52.9 222.7L146.3 222.7C158.7 222.7 168.8 212.6 168.8 200.2L168.8 90.7C168.8 78.3 178.8 68.2 191.3 68.2L1398.3 68.2C1410.8 68.2 1420.8 78.3 1420.8 90.7L1420.8 295.3C1420.8 307.8 1410.8 317.8 1398.3 317.8L191.3 317.8C178.8 317.8 168.8 327.9 168.8 340.3L168.8 836.2C168.8 848.7 178.8 858.7 191.3 858.7L2500 858.7" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 200.2C30.4 212.6 40.5 222.7 52.9 222.7L146.3 222.7C158.7 222.7 168.8 212.6 168.8 200.2L168.8 90.7C168.8 78.3 178.8 68.2 191.3 68.2L1398.3 68.2C1410.8 68.2 1420.8 78.3 1420.8 90.7L1420.8 295.3C1420.8 307.8 1410.8 317.8 1398.3 317.8L191.3 317.8C178.8 317.8 168.8 327.9 168.8 340.3L168.8 836.2C168.8 848.7 178.8 858.7 191.3 858.7L2500 858.7" data-a="0.08" data-b="0.58"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><g stroke="var(--navy)"><path class="draw" d="M-900 52H96Q118 52 118 74Q118 96 140 96" data-d0="M-900 52H96Q118 52 118 74Q118 96 140 96" data-a="0.00" data-b="0.50"/><path class="draw" d="M66 96Q44 96 44 118V316Q44 338 66 338H834Q856 338 856 316V118Q856 96 834 96Z" data-d0="M66 96Q44 96 44 118V316Q44 338 66 338H834Q856 338 856 316V118Q856 96 834 96Z" data-a="0.08" data-b="0.58"/><path class="draw" d="M856 190C856 220 870 220 870 250V950Q870 972 848 972H64Q42 972 42 994V1508Q42 1530 64 1530L2700 1530" data-d0="M856 190C856 220 870 220 870 250V950Q870 972 848 972H64Q42 972 42 994V1508Q42 1530 64 1530L2700 1530" data-a="0.16" data-b="0.66"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 id="intro-h" class="ttl an big" data-fx="drop" data-a=".08" data-b=".3" style="--x:216.4;--y:89.9;--X:74;--Y:140;--fs:198.5;--FS:128;color:var(--navy)">INTRODUCTION</h2>
+<div class="body dk"><span class="bl an" data-fx="wipe" data-a="0.42" data-b="0.58" style="--x:629.5;--y:416.3;--w:880.5;">I am a filmmaker based in Dubai, UAE. I have directed, written, and been</span><span class="bl an" data-fx="wipe" data-a="0.49" data-b="0.65" style="--x:629.5;--y:473.6;--w:880.5;">involved with multiple short films, documentaries, advertisements, and music</span><span class="bl an" data-fx="wipe" data-a="0.56" data-b="0.72" style="--x:629.5;--y:530.9;--w:880.5;">videos that have received awards and recognition across the Gulf. I have also</span><span class="bl an" data-fx="wipe" data-a="0.63" data-b="0.79" style="--x:629.5;--y:588.3;--w:879;">been involved with projects that have screened in countries all over the world.</span></div>
+<p class="body mb an" data-fx="wipe" data-a=".4" data-b=".7">I am a filmmaker based in Dubai, UAE. I have directed, written, and been involved with multiple short films, documentaries, advertisements, and music videos that have received awards and recognition across the Gulf. I have also been involved with projects that have screened in countries all over the world.</p>
+</div></div>
+</section>
+<section class="scene film" id="jahaan" data-kind="film" data-len="1" data-label="JAHAAN" data-film="0" aria-label="Jahaan (2025)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-jahaan-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-jahaan-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-jahaan-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-jahaan-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="jahaan-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="jahaan-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#jahaan-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#jahaan-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="jahaan-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="jahaan-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#jahaan-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#jahaan-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:78"><span class="sr">JAHAAN (2025)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:551.5;--y:86.8;--fs:104.3">JAHAAN (2025)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="0" aria-label="Enlarge Jahaan, frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/jahaan-1.webp" alt="Jahaan (2025), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="0" aria-label="Enlarge Jahaan, frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/jahaan-5.webp" alt="Jahaan (2025), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="0" aria-label="Enlarge Jahaan, frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/jahaan-4.webp" alt="Jahaan (2025), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="0" aria-label="Enlarge Jahaan, frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/jahaan-2.webp" alt="Jahaan (2025), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="0" aria-label="Enlarge Jahaan, frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/jahaan-3.webp" alt="Jahaan (2025), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="0" aria-label="Enlarge Jahaan, frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/jahaan-6.webp" alt="Jahaan (2025), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">Jahaan is a story about culture, and the pursuit of identity. I treated it as a study of visual and surrealist storytelling, where the approach was to communicate beyond the surface and challenge the film form.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Writer, Director, Editor, and Sound Post Production.</p><a class="watch" href="https://www.youtube.com/watch?v=rOQH-rHGutc" target="_blank" rel="noopener">WATCH THE FILM <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene film" id="sugar" data-kind="film" data-len="1" data-label="TWO PACKETS OF SUGAR, TRUST ME." data-film="1" aria-label="Two Packets of Sugar, Trust Me. (2025)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-sugar-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-sugar-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-sugar-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-sugar-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="sugar-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="sugar-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#sugar-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#sugar-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="sugar-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="sugar-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#sugar-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#sugar-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:62.8"><span class="sr">TWO PACKETS OF SUGAR, TRUST ME. (2025)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:550.4;--y:67.8;--fs:62.8">TWO PACKETS OF SUGAR,</span><span class="tl" style="--cx:550.3;--y:155.6;--fs:62.8">TRUST ME. (2025)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/sugar-3.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/sugar-1.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/sugar-5.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/sugar-4.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/sugar-2.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="1" aria-label="Enlarge Two Packets of Sugar, Trust Me., frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/sugar-6.webp" alt="Two Packets of Sugar, Trust Me. (2025), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">I have always been interested in films that use stylised storytelling. “Two Packets of Sugar, Trust Me.” is an attempt to tell an intimate story of self-reflection in a similarly elevated style.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Writer, Director, Editor, and Sound Post Production.</p><a class="watch" href="https://www.youtube.com/watch?v=VAZgN3wG2-Q" target="_blank" rel="noopener">WATCH THE FILM <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene film" id="roots" data-kind="film" data-len="1" data-label="ROOTS" data-film="2" aria-label="Roots (2026)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-roots-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-roots-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-roots-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-roots-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="roots-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="roots-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#roots-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#roots-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="roots-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="roots-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#roots-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#roots-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:78"><span class="sr">ROOTS (2026)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:549.8;--y:92.8;--fs:94.4">ROOTS (2026)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="2" aria-label="Enlarge Roots, frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/roots-3.webp" alt="Roots (2026), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="2" aria-label="Enlarge Roots, frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/roots-1.webp" alt="Roots (2026), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="2" aria-label="Enlarge Roots, frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/roots-5.webp" alt="Roots (2026), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="2" aria-label="Enlarge Roots, frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/roots-4.webp" alt="Roots (2026), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="2" aria-label="Enlarge Roots, frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/roots-2.webp" alt="Roots (2026), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="2" aria-label="Enlarge Roots, frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/roots-6.webp" alt="Roots (2026), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">As someone who is interested in narratives pertaining to identity and culture, Chef Monal Malhotra’s story really resonated with me. Interconnecting the story between the modern day and the 90s was both exciting and daunting given the small scale, run-and-gun nature of the production.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Co-Writer, Director, Editor, and Sound Post Production.</p><a class="watch" href="https://www.youtube.com/watch?v=iN8b0-Fx5Bw&amp;t=60s" target="_blank" rel="noopener">WATCH THE FILM <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene film" id="guest-room" data-kind="film" data-len="1" data-label="THE GUEST ROOM" data-film="3" aria-label="The Guest Room (2025)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-guest-room-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-guest-room-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-guest-room-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-guest-room-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="guest-room-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="guest-room-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#guest-room-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#guest-room-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="guest-room-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="guest-room-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#guest-room-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#guest-room-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:68.0"><span class="sr">THE GUEST ROOM (2025)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:556.4;--y:108.6;--fs:68.0">THE GUEST ROOM (2025)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="3" aria-label="Enlarge The Guest Room, frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/guestroom-3.webp" alt="The Guest Room (2025), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="3" aria-label="Enlarge The Guest Room, frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/guestroom-1.webp" alt="The Guest Room (2025), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="3" aria-label="Enlarge The Guest Room, frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/guestroom-5.webp" alt="The Guest Room (2025), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="3" aria-label="Enlarge The Guest Room, frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/guestroom-4.webp" alt="The Guest Room (2025), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="3" aria-label="Enlarge The Guest Room, frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/guestroom-2.webp" alt="The Guest Room (2025), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="3" aria-label="Enlarge The Guest Room, frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/guestroom-6.webp" alt="The Guest Room (2025), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">Socio-political commentary and analysis is one of the prime ways that filmmaking can engage in important dialog. The Guest Room is about the unfeeling nature of capitalism and how it has adverse effects on people on a micro and macro scale.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Co-Writer, Art Director, and Assembly Editor.</p><a class="watch" href="https://vimeo.com/1082246023" target="_blank" rel="noopener">WATCH THE TRAILER <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene film" id="till-death" data-kind="film" data-len="1" data-label="TILL DEATH DO US PART" data-film="4" aria-label="Till Death Do Us Part (2025)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-till-death-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-till-death-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-till-death-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-till-death-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="till-death-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="till-death-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#till-death-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#till-death-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="till-death-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="till-death-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#till-death-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#till-death-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:52.2"><span class="sr">TILL DEATH DO US PART (2025)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:552.6;--y:118.1;--fs:52.2">TILL DEATH DO US PART (2025)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/tilldeath-3.webp" alt="Till Death Do Us Part (2025), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/tilldeath-1.webp" alt="Till Death Do Us Part (2025), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/tilldeath-5.webp" alt="Till Death Do Us Part (2025), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/tilldeath-4.webp" alt="Till Death Do Us Part (2025), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/tilldeath-2.webp" alt="Till Death Do Us Part (2025), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="4" aria-label="Enlarge Till Death Do Us Part, frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/tilldeath-6.webp" alt="Till Death Do Us Part (2025), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">Till Death Do Us Part is a dissection of relationships and the complexity of opposing natures in the context of love. While the film’s approach is absurdist, there is a sincerity at the core which drives it.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Co-Writer and Script Supervisor.</p><a class="watch" href="https://vimeo.com/1097167845/c1daa043c7" target="_blank" rel="noopener">WATCH THE FILM <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene film" id="cuban" data-kind="film" data-len="1" data-label="COURTESY OF CUBAN EVANGELICAL BOB" data-film="5" aria-label="Courtesy of Cuban Evangelical Bob (2024)">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-cuban-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-cuban-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-cuban-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-cuban-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="cuban-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="cuban-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#cuban-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#cuban-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.70"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V929Q505.9 951 483.9 951L-900 951" data-a="0.15" data-b="0.85"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="cuban-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="cuban-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#cuban-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#cuban-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.70"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.10" data-b="0.80"/><path class="draw" d="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-d0="M428 330Q450 330 450 352V1183Q450 1205 428 1205L-900 1205" data-a="0.20" data-b="0.90"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.30" data-b="1.00"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 class="ttl film-t" style="--FS:52.3"><span class="sr">COURTESY OF CUBAN EVANGELICAL BOB (2024)</span><span class="tls" aria-hidden="true"><span class="tl" style="--cx:558.9;--y:82.8;--fs:52.3">COURTESY OF CUBAN</span><span class="tl" style="--cx:558.9;--y:155.8;--fs:52.3">EVANGELICAL BOB (2024)</span></span></h2>
+<button class="still an" data-fx="rise" data-a="0.12" data-b="0.50" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 1" style="--x:50;--y:290;--w:486;--h:304;--X:36;--Y:380;--W:405;--H:253;--d:5"><span class="ph"><img src="images/cuban-3.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 1" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.19" data-b="0.57" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 2" style="--x:557;--y:290;--w:486;--h:304;--X:459;--Y:380;--W:405;--H:253;--d:-4"><span class="ph"><img src="images/cuban-1.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 2" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.26" data-b="0.64" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 3" style="--x:1064;--y:290;--w:486;--h:304;--X:36;--Y:651;--W:405;--H:253;--d:6"><span class="ph"><img src="images/cuban-5.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 3" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.33" data-b="0.71" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 4" style="--x:50;--y:615;--w:486;--h:304;--X:459;--Y:651;--W:405;--H:253;--d:-5"><span class="ph"><img src="images/cuban-4.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 4" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.40" data-b="0.78" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 5" style="--x:557;--y:615;--w:486;--h:304;--X:36;--Y:922;--W:405;--H:253;--d:4"><span class="ph"><img src="images/cuban-6.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 5" loading="lazy"></span></button><button class="still an" data-fx="rise" data-a="0.47" data-b="0.85" data-film="5" aria-label="Enlarge Courtesy of Cuban Evangelical Bob, frame 6" style="--x:1064;--y:615;--w:486;--h:304;--X:459;--Y:922;--W:405;--H:253;--d:-6"><span class="ph"><img src="images/cuban-2.webp" alt="Courtesy of Cuban Evangelical Bob (2024), frame 6" loading="lazy"></span></button>
+<div class="notes an" data-fx="rise" data-a=".5" data-b="1" style="--x:50;--y:991;--w:1500;--X:36;--Y:1251;--W:828;">
+<div class="n-ap"><h3 class="n-h">APPROACH</h3><p class="n-p">Artists tend to struggle quite a bit with imposter syndrome. Within this story, both the protagonists, Nicky and Patrick act as the personifications of self-doubt and belief. Using comedy as a medium of expression, the short film tells the story of aspiring artists.</p></div>
+<div class="n-side"><h3 class="n-h">ROLE</h3><p class="n-r">Writer, Director, Editor, and Sound Post Production.</p><a class="watch" href="https://www.youtube.com/watch?v=1SyM_RytuQ4" target="_blank" rel="noopener">WATCH THE FILM <span aria-hidden="true">&#8599;</span><span class="sr"> (opens in a new tab)</span></a></div>
+</div>
+</div></div>
+</section>
+<section class="scene" id="bts" data-kind="bts" data-len="3.2" data-label="BEHIND THE SCENES" aria-labelledby="bts-h">
+<div class="stage" style="--bg:var(--pale)"><div class="cv">
+<svg class="band dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><pattern id="gr-bts-dk" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="var(--navy)"/><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z" fill="url(#gr-bts-dk)" style="mix-blend-mode:overlay"/></svg>
+<svg class="band mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><pattern id="gr-bts-mb" patternUnits="userSpaceOnUse" width="720" height="480"><image href="images/grain-soft.jpg" width="720" height="480"/></pattern></defs><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="var(--navy)"/><path d="M6500 -4700L-5600 6080L-9000 -9000Z" fill="url(#gr-bts-mb)" style="mix-blend-mode:overlay"/></svg>
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><defs><clipPath id="bts-dk-in"><path d="M6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath><clipPath id="bts-dk-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6801 -2902.6L-5259.9 3828.6L-6000 -6000Z"/></clipPath></defs><g clip-path="url(#bts-dk-in)" stroke="var(--pale)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.20"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V848Q505.9 870 483.9 870L-900 870" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V848Q505.9 870 483.9 870L-900 870" data-a="0.08" data-b="0.28"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#bts-dk-out)" stroke="var(--navy)"><path class="draw" d="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-d0="M2500 149.4L1332.6 149.4L1238.5 149.4C1226.0 149.4 1216.0 159.5 1216.0 171.9L1216.0 484.3C1216.0 496.7 1226.0 506.8 1238.5 506.8L1495.6 506.8C1508.0 506.8 1518.1 516.9 1518.1 529.3L1518.1 640.9C1518.1 653.4 1508.0 663.4 1495.6 663.4L528.4 663.4C516.0 663.4 505.9 673.5 505.9 685.9L505.9 827.1C505.9 839.5 516.0 849.6 528.4 849.6L1600.0 849.6L2500 849.6" data-a="0.00" data-b="0.20"/><path class="draw" d="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V848Q505.9 870 483.9 870L-900 870" data-d0="M-900 58.7L0.0 58.7L15.2 58.7C19.2 58.7 23.1 60.3 26.0 63.1C28.8 66.0 30.4 69.9 30.4 73.9L30.4 171.2C30.4 183.6 40.5 193.7 52.9 193.7L146.3 193.7C158.7 193.7 168.8 183.6 168.8 171.2L168.8 81.2C168.8 68.8 178.8 58.7 191.3 58.7L910.6 58.7C923.0 58.7 933.1 68.8 933.1 81.2L933.1 221.9C933.1 234.3 923.0 244.4 910.6 244.4L191.3 244.4C178.8 244.4 168.8 254.4 168.8 266.9L168.8 459.1C168.8 471.5 178.8 481.6 191.3 481.6L483.4 481.6C495.9 481.6 505.9 491.7 505.9 504.1L505.9 610.7V848Q505.9 870 483.9 870L-900 870" data-a="0.08" data-b="0.28"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><defs><clipPath id="bts-mb-in"><path d="M6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath><clipPath id="bts-mb-out"><path clip-rule="evenodd" d="M-30000 -30000H30000V30000H-30000ZM6500 -4700L-5600 6080L-9000 -9000Z"/></clipPath></defs><g clip-path="url(#bts-mb-in)" stroke="var(--pale)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.20"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.08" data-b="0.28"/><path class="draw" d="M428 330Q450 330 450 352V1268Q450 1290 428 1290L-900 1290" data-d0="M428 330Q450 330 450 352V1268Q450 1290 428 1290L-900 1290" data-a="0.16" data-b="0.36"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.24" data-b="0.44"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g><g clip-path="url(#bts-mb-out)" stroke="var(--navy)"><path class="draw" d="M-900 46H100Q122 46 122 68Q122 90 144 90" data-d0="M-900 46H100Q122 46 122 68Q122 90 144 90" data-a="0.00" data-b="0.20"/><path class="draw" d="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-d0="M82 90Q60 90 60 112V308Q60 330 82 330H818Q840 330 840 308V112Q840 90 818 90Z" data-a="0.08" data-b="0.28"/><path class="draw" d="M428 330Q450 330 450 352V1268Q450 1290 428 1290L-900 1290" data-d0="M428 330Q450 330 450 352V1268Q450 1290 428 1290L-900 1290" data-a="0.16" data-b="0.36"/><path class="draw" d="M2700 355H700" data-d0="M2700 355H700" data-a="0.24" data-b="0.44"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 id="bts-h" class="ttl film-t bts-t" style="--FS:74"><span class="tls"><span class="tl" style="--cx:550.5;--y:108;--fs:72">BEHIND THE SCENES</span></span></h2>
+<div class="track"><figure class="pol" style="--r:-3deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / JAHAAN</figcaption>
+</figure><figure class="pol" style="--r:2.5deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / TWO PACKETS OF SUGAR, TRUST ME.</figcaption>
+</figure><figure class="pol" style="--r:-1.5deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / ROOTS</figcaption>
+</figure><figure class="pol" style="--r:3deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / THE GUEST ROOM</figcaption>
+</figure><figure class="pol" style="--r:-2.5deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / TILL DEATH DO US PART</figcaption>
+</figure><figure class="pol" style="--r:1.5deg">
+<span class="tape" aria-hidden="true"></span>
+<div class="ph-slot"><span>[BTS PHOTO]</span></div>
+<figcaption>ON SET / COURTESY OF CUBAN EVANGELICAL BOB</figcaption>
+</figure></div>
+</div></div>
+</section>
+<section class="scene" id="contact" data-kind="contact" data-len="1" data-label="CONTACT" aria-labelledby="contact-h">
+<div class="stage" style="--bg:var(--navy)"><div class="cv">
+<svg class="wires dk" viewBox="0 0 1600 900" aria-hidden="true"><g stroke="var(--line)"><path class="draw" d="M-900 23.9L0.0 23.9L156.9 23.9C169.3 23.9 179.4 34.0 179.4 46.4L179.4 210.2C179.4 222.6 189.5 232.7 201.9 232.7L429.0 232.7C441.4 232.7 451.5 222.6 451.5 210.2L451.5 58.5C451.5 46.1 461.6 36.0 474.0 36.0L1551.4 36.0C1563.8 36.0 1573.9 46.1 1573.9 58.5L1573.9 701.3C1573.9 713.7 1563.8 723.8 1551.4 723.8L459.9 723.8C447.5 723.8 437.4 733.8 437.4 746.3L437.4 830.7C437.4 843.1 447.5 853.2 459.9 853.2L1600.0 853.2L2500 853.2" data-d0="M-900 23.9L0.0 23.9L156.9 23.9C169.3 23.9 179.4 34.0 179.4 46.4L179.4 210.2C179.4 222.6 189.5 232.7 201.9 232.7L429.0 232.7C441.4 232.7 451.5 222.6 451.5 210.2L451.5 58.5C451.5 46.1 461.6 36.0 474.0 36.0L1551.4 36.0C1563.8 36.0 1573.9 46.1 1573.9 58.5L1573.9 701.3C1573.9 713.7 1563.8 723.8 1551.4 723.8L459.9 723.8C447.5 723.8 437.4 733.8 437.4 746.3L437.4 830.7C437.4 843.1 447.5 853.2 459.9 853.2L1600.0 853.2L2500 853.2" data-a="0.00" data-b="0.55"/><path class="draw" d="M-900 56.9L0.0 56.9L124.3 56.9C136.8 56.9 146.8 67.0 146.8 79.4L146.8 243.2C146.8 255.6 156.9 265.7 169.3 265.7L459.1 265.7C471.5 265.7 481.6 255.6 481.6 243.2L481.6 91.5C481.6 79.1 491.6 69.0 504.1 69.0L1521.4 69.0C1533.8 69.0 1543.9 79.1 1543.9 91.5L1543.9 665.3C1543.9 677.8 1533.8 687.8 1521.4 687.8L419.9 687.8C407.4 687.8 397.4 697.9 397.4 710.3L397.4 861.3C397.4 873.7 407.4 883.8 419.9 883.8L1600.0 883.8L2500 883.8" data-d0="M-900 56.9L0.0 56.9L124.3 56.9C136.8 56.9 146.8 67.0 146.8 79.4L146.8 243.2C146.8 255.6 156.9 265.7 169.3 265.7L459.1 265.7C471.5 265.7 481.6 255.6 481.6 243.2L481.6 91.5C481.6 79.1 491.6 69.0 504.1 69.0L1521.4 69.0C1533.8 69.0 1543.9 79.1 1543.9 91.5L1543.9 665.3C1543.9 677.8 1533.8 687.8 1521.4 687.8L419.9 687.8C407.4 687.8 397.4 697.9 397.4 710.3L397.4 861.3C397.4 873.7 407.4 883.8 419.9 883.8L1600.0 883.8L2500 883.8" data-a="0.10" data-b="0.65"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<svg class="wires mb" viewBox="0 0 900 1600" aria-hidden="true"><g stroke="var(--line)"><path class="draw" d="M-900 24H560Q582 24 582 46V74Q582 96 604 96" data-d0="M-900 24H560Q582 24 582 46V74Q582 96 604 96" data-a="0.00" data-b="0.55"/><path class="draw" d="M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z" data-d0="M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z" data-a="0.10" data-b="0.65"/><path class="spine" data-side="l"/><path class="spine" data-side="r"/></g></svg>
+<h2 id="contact-h" class="name" aria-label="Let's talk">
+<span class="line an" data-fx="drop" data-a=".1" data-b=".35" aria-hidden="true" style="--x:547.6;--y:33.1;--X:56;--Y:70;--fs:348.1;--FS:268">LET'S</span>
+<span class="line an" data-fx="drop" data-a=".18" data-b=".43" aria-hidden="true" style="--x:697.2;--y:387.8;--X:180;--Y:360;--fs:277.0;--FS:232">TALK</span>
+</h2>
+<div class="who an" data-fx="left" data-a=".25" data-b=".5" style="--x:40;--y:300;--w:380;--X:60;--Y:1230;--W:780;">
+<span class="who-n">HARSH PUROHIT</span>
+<span class="who-l">FILMMAKER / DUBAI, UAE</span>
+</div>
+<ul class="links an" data-fx="wipe" data-a=".35" data-b=".7" style="--x:470;--y:742;--w:1110;--X:60;--Y:760;--W:780;">
+<li><span class="k">EMAIL</span><span class="row"><a class="v" href="mailto:harshpurohit2318@gmail.com">harshpurohit2318@gmail.com</a><button class="copy" type="button" data-copy="harshpurohit2318@gmail.com">COPY</button></span></li>
+<li><span class="k">PHONE</span><span class="row"><a class="v" href="tel:+971507946891">+971 50 794 6891</a><button class="copy" type="button" data-copy="+971 50 794 6891">COPY</button></span></li>
+</ul>
+<a class="totop an" data-fx="fade" data-a=".5" data-b=".75" href="#cover" style="--x:40;--y:600;--X:60;--Y:1440;">BACK TO THE TOP</a>
+</div></div>
+</section>
+</main>
+<div class="fcard" aria-hidden="true"><span class="fc-t">JAHAAN</span><span class="fc-y">2025</span><span class="fc-l"></span><span class="fc-r"></span></div>
+<div class="lb" role="dialog" aria-modal="true" aria-label="Film still" hidden>
+<figure class="lb-fig"><img src="" alt=""><figcaption><span class="lb-t"></span><span class="lb-l"></span></figcaption></figure>
+<div class="lb-ctrl"><button type="button" data-lb="-1">PREV</button><button type="button" data-lb="0">CLOSE</button><button type="button" data-lb="1">NEXT</button></div>
+</div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var FILMS = [{"t": "JAHAAN", "y": "2025", "l": "During a smoke break, a man retreats into magical memories where he is transported to an impressionistic dimension of colors and patterns. He pursues a mysterious yet familiar figure.", "r": "Writer, Director, Editor, and Sound Post Production."}, {"t": "TWO PACKETS OF SUGAR, TRUST ME.", "y": "2025", "l": "One quiet morning at a bar, Adrian Catherine Shaw is visited by her future self and told she must stop her friend, Ryan, the waiter, from getting fired or risk losing her future. As the two versions of Adrian work together, they face their own struggles and differences.", "r": "Writer, Director, Editor, and Sound Post Production."}, {"t": "ROOTS", "y": "2026", "l": "The true story of Monal Malhotra, an Indian chef in 90s Bahrain who was tasked with cooking for an all-Indian function while only specializing in European cuisine. The story follows his journey through Bahrain as he learns about Indian cuisine and reconnects with his culture.", "r": "Co-Writer, Director, Editor, and Sound Post Production."}, {"t": "THE GUEST ROOM", "y": "2025", "l": "When a group of strange salesmen arrive at his doorstep with shiny replacements for his home, an ordinary man slowly realizes that the products, and promises they offer, are much more sinister than they appear.", "r": "Co-Writer, Art Director, and Assembly Editor."}, {"t": "TILL DEATH DO US PART", "y": "2025", "l": "A comedy romance that I co-wrote for my senior year thesis.", "r": "Co-Writer and Script Supervisor."}, {"t": "COURTESY OF CUBAN EVANGELICAL BOB", "y": "2024", "l": "Nicky and Patrick are two young and aspiring musicians. After another unsuccessful all-nighter, Nicky begins to have doubts about his pursuit of music. While trying to make coffee, and under the influence of an unidentified laced joint, Nicky and Patrick discover the innate rhythm of the world and the meaning of life.", "r": "Writer, Director, Editor, and Sound Post Production."}];
+  var hp = document.getElementById('hp');
+  var main = document.getElementById('main-view');
+  var rail = hp.querySelector('.rail');
+  var railScene = hp.querySelector('.rail-scene');
+  var railTc = hp.querySelector('.rail-tc');
+  var railFill = hp.querySelector('.rail-fill');
+  var menuBtn = hp.querySelector('.rail-menu');
+  var panel = document.getElementById('panel');
+  var scrim = hp.querySelector('.scrim');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  var easeOut = function (t) { return 1 - Math.pow(1 - t, 3); };
+  var easeBack = function (t) { var c = 1.25; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+
+  // ---------- scene registry ----------
+  var scenes = [].slice.call(hp.querySelectorAll('.scene')).map(function (sec) {
+    var s = {
+      el: sec, id: sec.id, kind: sec.getAttribute('data-kind'), len: parseFloat(sec.getAttribute('data-len')) || 2,
+      label: sec.getAttribute('data-label'), cv: sec.querySelector('.cv'), last: -1,
+      once: sec.getAttribute('data-len') === '1', played: -1,
+      anims: [].slice.call(sec.querySelectorAll('.an')).map(function (el) {
+        return { el: el, fx: el.getAttribute('data-fx'), a: parseFloat(el.getAttribute('data-a')), b: parseFloat(el.getAttribute('data-b')), r: parseFloat(el.getAttribute('data-r') || '0'), last: -1 };
+      }),
+      draws: [].slice.call(sec.querySelectorAll('path.draw')).map(function (p) {
+        return { el: p, a: parseFloat(p.getAttribute('data-a')), b: parseFloat(p.getAttribute('data-b')), len: 0, last: -1 };
+      }),
+      letters: [].slice.call(sec.querySelectorAll('.lt')),
+      layers: [].slice.call(sec.querySelectorAll('.pl')),
+      lines: [].slice.call(sec.querySelectorAll('.name .line')),
+      track: sec.querySelector('.track')
+    };
+    return s;
+  });
+
+  var pm = false, W = 0, H = 0, top0 = 0;
+
+  function measureDraws() {
+    scenes.forEach(function (s) {
+      s.draws.forEach(function (d) {
+        if (d.el.getClientRects().length === 0) return;   // hidden variant (desktop vs phone)
+        d.len = d.el.getTotalLength();
+        d.el.style.strokeDasharray = d.len + ' ' + d.len;
+        d.last = -1;
+      });
+      s.anims.forEach(function (a) { a.last = -1; });
+      s.last = -1;
+    });
+  }
+
+  function layout() {
+    var w = window.innerWidth, h = window.innerHeight;
+    pm = (w / h < 1.05) || w < 700;
+    hp.classList.toggle('pm', pm);
+    var railW = pm ? 0 : rail.offsetWidth;
+    top0 = pm ? rail.offsetHeight : 0;
+    W = w - railW; H = h - top0;
+    var cw = pm ? 900 : 1600, ch = pm ? 1600 : 900;
+    var sc = Math.min(W / cw, H / ch);
+    var ox = (W - cw * sc) / 2, oy = (H - ch * sc) / 2;
+    scenes.forEach(function (s) {
+      var stage = s.el.querySelector('.stage'), k = sc, x0 = ox, y0 = oy, sh = H;
+      if (s.kind === 'film') {
+        // film pages scroll normally: scale to the width so the stills get as big as the screen allows
+        k = pm ? W / 900 : Math.min(W / 1600, 1.25);
+        x0 = (W - cw * k) / 2; y0 = 0;
+        var notes = s.el.querySelector('.notes');
+        sh = Math.ceil((notes.offsetTop + notes.offsetHeight + (pm ? 110 : 90)) * k);
+        stage.style.height = sh + 'px';
+      } else if (s.once) stage.style.height = H + 'px';
+      else s.el.style.height = Math.round(s.len * H) + 'px';
+      s.cv.style.transform = 'translate(' + x0.toFixed(2) + 'px,' + y0.toFixed(2) + 'px) scale(' + k.toFixed(5) + ')';
+      joinLines(s, k, x0, y0, sh);
+    });
+    measureDraws();
+    update(true);
+  }
+
+  // ---------- the maze: two spines run the full height of the page; every loose line end joins one ----------
+  function joinLines(s, k, x0, y0, sh) {
+    var gut = pm ? 7 : 10;
+    var L = ((gut - x0) / k).toFixed(1), Rr = ((W - gut - x0) / k).toFixed(1);
+    var top = (-y0 / k).toFixed(1), bot = ((sh - y0) / k).toFixed(1);
+    s.el.querySelectorAll('.wires').forEach(function (svg) {
+      if (svg.getClientRects().length === 0) return;
+      svg.querySelectorAll('path.spine').forEach(function (p) {
+        p.setAttribute('d', 'M' + (p.getAttribute('data-side') === 'l' ? L : Rr) + ' ' + top + 'V' + bot);
+      });
+      svg.querySelectorAll('path.draw').forEach(function (p) {
+        // every loose end curves into a spine with the PDF's corner radius: no sharp joins
+        var r = 22, Ln = +L, Rn = +Rr, fx = function (v) { return (+v).toFixed(1); };
+        var d = p.getAttribute('data-d0');
+        d = d.replace(/^M-900 58\.7L0\.0 58\.7L15\.2 58\.7C19\.2 58\.7 23\.1 60\.3 26\.0 63\.1C28\.8 66\.0 30\.4 69\.9 30\.4 73\.9/,
+                      'M' + L + ' 18C' + L + ' 46 30.4 42 30.4 73.9')
+             .replace(/^M-900 ([\d.]+)(L0\.0 \1)?/, function (m, y) { return 'M' + L + ' ' + fx(y - r) + 'Q' + L + ' ' + y + ' ' + fx(Ln + r) + ' ' + y; })
+             .replace(/^M(?:2700|2500) ([\d.]+)/, function (m, y) { return 'M' + Rr + ' ' + fx(y - r) + 'Q' + Rr + ' ' + y + ' ' + fx(Rn - r) + ' ' + y; })
+             .replace(/(?:L1600\.0 ([\d.]+))?L(?:2500|2700) ([\d.]+)$/, function (m, a, y) { return 'L' + fx(Rn - r) + ' ' + y + 'Q' + Rr + ' ' + y + ' ' + Rr + ' ' + fx(+y + r); })
+             .replace(/L-900 ([\d.]+)$/, function (m, y) { return 'L' + fx(Ln + r) + ' ' + y + 'Q' + L + ' ' + y + ' ' + L + ' ' + fx(+y + r); });
+        p.setAttribute('d', d);
+      });
+    });
+  }
+
+  // ---------- applying progress ----------
+  function setT(a, t) {
+    if (Math.abs(t - a.last) < 0.0005) return;
+    a.last = t;
+    var el = a.el, k = 1 - t, st = el.style;
+    switch (a.fx) {
+      case 'drop':
+        st.transform = k ? 'translateY(' + (-k * 150).toFixed(1) + 'px) rotate(' + (-k * 6).toFixed(2) + 'deg)' : '';
+        st.opacity = Math.min(1, t * 1.6);
+        break;
+      case 'left':
+        st.transform = k ? 'translateX(' + (-k * 320).toFixed(1) + 'px) rotate(' + (-k * 4).toFixed(2) + 'deg)' : '';
+        st.opacity = Math.min(1, t * 1.5);
+        break;
+      case 'deal':
+        st.transform = k ? 'translate(' + (k * a.r * 18).toFixed(1) + 'px,' + (k * 380).toFixed(1) + 'px) rotate(' + (k * a.r * 2.2).toFixed(2) + 'deg) scale(' + (1 + k * 0.15).toFixed(3) + ')' : '';
+        st.opacity = Math.min(1, t * 2.5);
+        break;
+      case 'wipe':
+        st.clipPath = k ? 'inset(-12% ' + (k * 100).toFixed(2) + '% -12% -2%)' : '';
+        break;
+      case 'band':
+        st.transform = k ? 'translate(' + (-k * 900).toFixed(1) + 'px,' + (-k * 520).toFixed(1) + 'px)' : '';
+        break;
+      case 'rise':
+        st.transform = k ? 'translateY(' + (k * 46).toFixed(1) + 'px)' : '';
+        st.opacity = t;
+        break;
+      case 'fade':
+        st.opacity = t;
+        break;
+    }
+  }
+
+  function setDraw(d, t) {
+    if (!d.len || Math.abs(t - d.last) < 0.0005) return;
+    d.last = t;
+    d.el.style.strokeDashoffset = (d.len * (1 - t)).toFixed(1);
+  }
+
+  var loadT = reduce ? 1 : 0;
+  var mx = 0, my = 0;
+
+  function applyCover(s, p) {
+    var q = loadT;
+    s.draws.forEach(function (d) { setDraw(d, easeOut(clamp((q - d.a) / (d.b - d.a)))); });
+    s.letters.forEach(function (el) {
+      var i = +el.getAttribute('data-i'), second = el.classList.contains('p');
+      var a = (second ? 0.22 : 0.06) + i * 0.05;
+      var t = easeBack(clamp((q - a) / 0.32)), k = 1 - t;
+      el.style.transform = k > 0.001 ? 'translateY(' + (-k * 260).toFixed(1) + 'px) rotate(' + (k * (i % 2 ? 14 : -12)).toFixed(2) + 'deg)' : '';
+      el.style.opacity = Math.min(1, t * 2);
+    });
+    s.anims.forEach(function (a) { setT(a, easeOut(clamp((q - a.a) / (a.b - a.a)))); });
+    // echo: layers fan out on load, spread further as you scroll, lean toward the mouse
+    var fan = easeOut(clamp((q - 0.1) / 0.6)) * (1 + p * 1.3);
+    var k = pm ? 0.9 : 1;
+    s.layers.forEach(function (img, i) {
+      var o = parseFloat(img.getAttribute('data-o')) * k * fan + (fine ? mx * (i - 3) * 10 : 0);
+      var y = (fine ? my * (3 - i) * 5 : 0) + p * (3 - i) * 14;
+      img.style.transform = 'translate(' + o.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    });
+    var drift = pm ? 0.35 : 1;
+    if (s.lines[0]) s.lines[0].style.transform = p ? 'translateX(' + (-p * 40 * drift).toFixed(1) + 'px)' : '';
+    if (s.lines[1]) s.lines[1].style.transform = p ? 'translateX(' + (p * 28 * drift).toFixed(1) + 'px)' : '';
+  }
+
+  function applyScene(s, p) {
+    if (s.kind === 'cover') { applyCover(s, p); return; }
+    var pa = reduce ? 1 : p;   // reduced motion: scenes are shown fully assembled
+    s.draws.forEach(function (d) { setDraw(d, easeOut(clamp((pa - d.a) / (d.b - d.a)))); });
+    s.anims.forEach(function (a) {
+      var t = clamp((pa - a.a) / (a.b - a.a));
+      setT(a, a.fx === 'deal' ? easeBack(t) : easeOut(t));
+    });
+    if (s.track) {
+      var tw = s.track.scrollWidth, cw = pm ? 900 : 1600;
+      var from = cw + 40, to = cw - tw - (pm ? 60 : 120);
+      var t = clamp((p - 0.06) / 0.86); if (!reduce) t = easeOut(t);
+      s.track.style.transform = 'translateX(' + (from + (to - from) * t).toFixed(1) + 'px)';
+    }
+  }
+
+  function progressOf(s) {
+    var r = s.el.getBoundingClientRect();
+    var total = s.el.offsetHeight - H;
+    var lead = 0.5 * H;
+    return clamp((top0 - r.top + lead) / (total + lead));
+  }
+
+  // ---------- rail state ----------
+  var ticks = [].slice.call(hp.querySelectorAll('.tick'));
+  var ixLinks = [].slice.call(hp.querySelectorAll('.ix a'));
+  var current = '';
+  function setCurrent(id, label) {
+    if (id === current) return;
+    current = id;
+    railScene.textContent = label;
+    ticks.concat(ixLinks).forEach(function (a) {
+      var on = a.getAttribute('data-target') === id;
+      a.classList.toggle('on', on);
+      if (a.tagName === 'A' && a.closest('.ix')) { if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }
+    });
+  }
+  function timecode(f) {
+    var secs = f * 452, fr = Math.floor((secs % 1) * 24);
+    var s = Math.floor(secs), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    return 'TC 00:' + pad(Math.floor(s / 60)) + ':' + pad(s % 60) + ':' + pad(fr);
+  }
+
+  function update(force) {
+    var curId = 'cover', curLabel = 'COVER';
+    scenes.forEach(function (s) {
+      var top = s.el.getBoundingClientRect().top;
+      if (top - top0 <= H * 0.45) { curId = s.id; curLabel = s.label; }
+      if (s.once) {
+        if (s.played < 0 && top < window.innerHeight * 0.7) play(s);
+        else if (s.played < 0 && force) applyScene(s, 0);
+        return;
+      }
+      var p = progressOf(s);
+      if (force || s.kind === 'cover' || Math.abs(p - s.last) > 0.0004) { s.last = p; applyScene(s, p); }
+    });
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var f = max > 0 ? clamp(window.scrollY / max) : 0;
+    setCurrent(curId, curLabel);
+    railTc.textContent = timecode(f);
+    railFill.style.height = 'calc(' + (f * 100).toFixed(2) + '% - ' + (f * 28).toFixed(1) + 'px)';
+    hp.style.setProperty('--prog', f.toFixed(4));
+  }
+
+  function play(s) {
+    s.played = 0;
+    if (reduce) { s.played = 1; applyScene(s, 1); return; }
+    var t0 = performance.now();
+    (function step(now) {
+      s.played = clamp((now - t0) / 1300);
+      applyScene(s, s.played);
+      if (s.played < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  var queued = false;
+  function onScroll() { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; update(false); }); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  var rz;
+  window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(layout, 120); });
+
+  // cover assembly on load (time based, so the opening frame always completes)
+  function runIntro() {
+    if (reduce) { update(true); return; }
+    var t0 = performance.now();
+    (function step(now) {
+      loadT = clamp((now - t0) / 1900);
+      update(false);
+      if (loadT < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  // ---------- cursor + hover card ----------
+  var card = hp.querySelector('.fcard');
+  var fcT = card.querySelector('.fc-t'), fcY = card.querySelector('.fc-y'), fcL = card.querySelector('.fc-l'), fcR = card.querySelector('.fc-r');
+  var drifters = scenes.filter(function (s) { return s.kind === 'film' || s.kind === 'intro'; });
+  if (fine && !reduce) {
+    var tx = -100, ty = -100, cx = tx, cy = ty;
+    window.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    (function loop() {
+      cx += (tx - cx) * 0.14; cy += (ty - cy) * 0.14;
+      var cw = card.offsetWidth || 360, ch = card.offsetHeight || 200;
+      var left = cx + cw + 40 > window.innerWidth ? cx - cw - 24 : cx + 26;
+      var topY = Math.max(8, Math.min(cy + 24, window.innerHeight - ch - 12));
+      card.style.transform = 'translate3d(' + left.toFixed(1) + 'px,' + topY.toFixed(1) + 'px,0)';
+      if (tx >= 0) {
+        var nx = (tx / window.innerWidth - 0.5) * 2, ny = (ty / window.innerHeight - 0.5) * 2;
+        mx += (nx - mx) * 0.05; my += (ny - my) * 0.05;
+        var vh = window.innerHeight;
+        drifters.forEach(function (s) {
+          var r = s.el.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > vh) return;
+          s.cv.style.setProperty('--mx', mx.toFixed(3)); s.cv.style.setProperty('--my', my.toFixed(3));
+        });
+      }
+      requestAnimationFrame(loop);
+    })();
+  }
+  var stills = [].slice.call(main.querySelectorAll('.still'));
+  stills.forEach(function (b) {
+    b.addEventListener('mouseenter', function () {
+      var f = FILMS[+b.getAttribute('data-film')];
+      fcT.textContent = f.t; fcY.textContent = f.y; fcL.textContent = f.l; fcR.textContent = 'ROLE: ' + f.r.replace(/\.$/, '');
+      card.classList.add('on');
+    });
+    b.addEventListener('mouseleave', function () { card.classList.remove('on'); });
+    b.addEventListener('click', function () { openLb(stills.indexOf(b)); });
+  });
+
+  // ---------- lightbox ----------
+  var lb = hp.querySelector('.lb'), lbImg = lb.querySelector('img'), lbT = lb.querySelector('.lb-t'), lbL = lb.querySelector('.lb-l'), at = -1;
+  function openLb(i) {
+    at = (i + stills.length) % stills.length;
+    var img = stills[at].querySelector('img');
+    lbImg.src = img.getAttribute('src'); lbImg.alt = img.alt; lbT.textContent = img.alt;
+    lbL.textContent = 'ROLE: ' + FILMS[+stills[at].getAttribute('data-film')].r.replace(/\.$/, '');
+    lb.hidden = false; card.classList.remove('on');
+    lb.querySelector('[data-lb="0"]').focus();
+  }
+  function closeLb() { lb.hidden = true; if (stills[at]) stills[at].focus({ preventScroll: true }); at = -1; }
+  lb.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-lb]');
+    if (d) { var v = +d.getAttribute('data-lb'); if (v === 0) closeLb(); else openLb(at + v); }
+    else if (e.target === lb) closeLb();
+  });
+
+  // ---------- copy contact details ----------
+  hp.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.getAttribute('data-copy');
+      var done = function (ok) { btn.textContent = ok ? 'COPIED' : 'SELECT TO COPY'; setTimeout(function () { btn.textContent = 'COPY'; }, 1600); };
+      var fallback = function () {
+        var v = btn.parentNode.querySelector('.v'), r = document.createRange();
+        r.selectNodeContents(v); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); done(false);
+      };
+      try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (e) { fallback(); }
+    });
+  });
+
+  // ---------- index panel ----------
+  function openPanel() {
+    panel.hidden = false; scrim.hidden = false;
+    requestAnimationFrame(function () { panel.classList.add('open'); scrim.classList.add('open'); });
+    menuBtn.setAttribute('aria-expanded', 'true');
+    var on = panel.querySelector('.ix a.on') || panel.querySelector('.ix a');
+    setTimeout(function () { on.focus({ preventScroll: true }); }, 60);
+  }
+  function closePanel(returnFocus) {
+    if (panel.hidden) return;
+    panel.classList.remove('open'); scrim.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    setTimeout(function () { panel.hidden = true; scrim.hidden = true; }, reduce ? 0 : 480);
+    if (returnFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function () { if (panel.hidden || !panel.classList.contains('open')) openPanel(); else closePanel(true); });
+  panel.querySelector('.panel-x').addEventListener('click', function () { closePanel(true); });
+  scrim.addEventListener('click', function () { closePanel(true); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!lb.hidden) {
+      if (e.key === 'Escape') closeLb();
+      else if (e.key === 'ArrowRight') openLb(at + 1);
+      else if (e.key === 'ArrowLeft') openLb(at - 1);
+      return;
+    }
+    if (e.key === 'Escape' && !panel.hidden) closePanel(true);
+  });
+
+  // ---------- routing: #bts is its own page, every other #id is a scene ----------
+  function sceneTarget(id) {
+    var s = null;
+    scenes.forEach(function (x) { if (x.id === id) s = x; });
+    return s;
+  }
+  function jumpTo(id) {
+    var s = sceneTarget(id);
+    if (!s) { window.scrollTo(0, 0); return; }
+    var secTop = s.el.getBoundingClientRect().top + window.scrollY - top0;
+    var total = s.el.offsetHeight - H, lead = 0.5 * H;
+    var want = s.kind === 'cover' ? 0 : s.kind === 'bts' ? 0.45 : 0.82;
+    var y = s.once ? secTop : secTop + want * (total + lead) - lead;
+    window.scrollTo(0, Math.max(0, Math.round(y)));
+  }
+  function route() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    if (id) jumpTo(id);
+    update(true);
+  }
+  hp.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    if (a.classList.contains('missing')) { e.preventDefault(); return; }
+    var id = a.getAttribute('href').slice(1);
+    if (!sceneTarget(id)) return;
+    e.preventDefault();
+    closePanel(false);
+    if (location.hash === '#' + id) route();
+    else location.hash = id;
+  });
+  window.addEventListener('hashchange', route);
+
+  // ---------- boot ----------
+  layout();
+  if (location.hash) route();
+  var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 900); })]).then(runIntro);
+  var moved = false;
+  ['wheel', 'touchmove', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { passive: true, once: true }); });
+  fontsReady.then(function () { layout(); if (location.hash && !moved) route(); });
+})();
+
+</script>
