@@ -66,10 +66,10 @@ M_COVER = [
     ('M52 96Q30 96 30 118V676Q30 698 52 698H848Q870 698 870 676V118Q870 96 848 96Z', LINE),
     ('M-900 1572H120Q142 1572 142 1550V740Q142 718 164 718L2700 718', LINE),
 ]
-# phone intro: scribble tucked under the title, copy box hugging the paragraph (56px, ~502 units tall)
-MI_SCRIB = dict(X=219, Y=384, W=462, H=440)
-MI_BOX = 860                     # top edge of the copy box
-MI_BOT = MI_BOX + 44 + 502 + 52  # paragraph top padding + paragraph + bottom padding
+# phone intro: copy box sits right under the title box, the scribble fills the space below it
+MI_BOX = 376                     # top edge of the copy box (title box ends at 338)
+MI_BOT = MI_BOX + 44 + 502 + 52  # paragraph top padding + paragraph (56px, ~502 units) + bottom padding
+MI_SCRIB = dict(X=188, Y=MI_BOT + 30, W=524, H=500)
 M_INTRO = [
     ('M-900 52H96Q118 52 118 74Q118 96 140 96', NAVY),
     ('M66 96Q44 96 44 118V316Q44 338 66 338H834Q856 338 856 316V118Q856 96 834 96Z', NAVY),
